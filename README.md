@@ -2,7 +2,15 @@
 
 An AI-powered web application that evaluates how effectively users understand and explain conceptual topics through spoken communication. The platform combines **speech-to-text transcription**, **semantic similarity analysis**, **audio feature extraction**, and an **intelligent multi-factor scoring engine** to deliver a comprehensive understanding assessment.
 
----
+## 🚀 Live Demo
+
+- 🌐 **Streamlit App:** https://voice-based-concept-understanding-analyser-opdgagardapptgyapkz.streamlit.app/
+- 🎥 **Demo Video:** https://drive.google.com/file/d/1P0eMJKoa6WT9HWGJKanaKMGO4tmNKhZH/view?usp=drivesdk
+[![Streamlit App](https://img.shields.io/badge/Live%20App-Streamlit-red?logo=streamlit)](https://voice-based-concept-understanding-analyser-opdgagardapptgyapkz.streamlit.app/)
+[![Demo Video](https://img.shields.io/badge/Demo-Video-blue?logo=google-drive)](https://drive.google.com/file/d/1P0eMJKoa6WT9HWGJKanaKMGO4tmNKhZH/view?usp=drivesdk)
+
+> Try the application online using the Streamlit link, or watch the demo video to see the complete workflow and features in action.
+
 
 ## Features
 
