@@ -6,8 +6,6 @@ import librosa
 import soundfile as sf
 import tempfile
 
-from config import WHISPER_MODEL_NAME
-
 logger = logging.getLogger(__name__)
 
 # Dynamically locate and add WinGet-installed Gyan.FFmpeg to path
@@ -29,8 +27,8 @@ def load_model():
     """
     Loads and caches the pre-trained Whisper model.
     """
-    logger.info("Loading Whisper '%s' model (cached via @st.cache_resource)...", WHISPER_MODEL_NAME)
-    m = whisper.load_model(WHISPER_MODEL_NAME)
+    logger.info("Loading Whisper 'base' model (cached via @st.cache_resource)...")
+    m = whisper.load_model("base")
     logger.info("Whisper model loaded successfully.")
     return m
 
@@ -69,17 +67,17 @@ def transcribe_audio(audio_path):
 
         if not text:
             logger.warning("No speech detected in audio.")
-            return "⚠️ No speech detected in audio."
+            return "ΓÜá∩╕Å No speech detected in audio."
 
         logger.info("Transcription complete: %d characters", len(text))
         return text
 
     except FileNotFoundError:
-        return "❌ Error: ffmpeg is not installed or not in the system PATH. OpenAI Whisper requires ffmpeg to transcribe audio. Please install ffmpeg and add it to your system PATH."
+        return "Γ¥î Error: ffmpeg is not installed or not in the system PATH. OpenAI Whisper requires ffmpeg to transcribe audio. Please install ffmpeg and add it to your system PATH."
     except Exception as e:
         if "WinError 2" in str(e) or "cannot find the file specified" in str(e):
-            return "❌ Error: ffmpeg is not installed or not in the system PATH. OpenAI Whisper requires ffmpeg to transcribe audio. Please install ffmpeg and add it to your system PATH."
-        return f"❌ Error: {str(e)}"
+            return "Γ¥î Error: ffmpeg is not installed or not in the system PATH. OpenAI Whisper requires ffmpeg to transcribe audio. Please install ffmpeg and add it to your system PATH."
+        return f"Γ¥î Error: {str(e)}"
     finally:
         # Clean up temporary normalized file
         if normalized_path and os.path.exists(normalized_path):

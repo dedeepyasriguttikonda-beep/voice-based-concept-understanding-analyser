@@ -5,15 +5,6 @@ import librosa.display
 import os
 import logging
 
-from config import (
-    REPORTS_DIR,
-    WAVEFORM_IMAGE_NAME,
-    SILENCE_TOP_DB,
-    WAVEFORM_COLOR,
-    WAVEFORM_LABEL_COLOR,
-    WAVEFORM_GRID_COLOR,
-)
-
 logger = logging.getLogger(__name__)
 
 
@@ -30,7 +21,7 @@ def load_audio(audio_path, sr=None):
     return y, sample_rate
 
 
-def extract_audio_features(audio_path, top_db=SILENCE_TOP_DB, y=None, sr=None):
+def extract_audio_features(audio_path, top_db=30, y=None, sr=None):
     """
     Extracts audio features including duration, RMS energy, spectral centroid (as average pitch),
     zero crossing rate, and pause ratio.
@@ -79,7 +70,7 @@ def extract_audio_features(audio_path, top_db=SILENCE_TOP_DB, y=None, sr=None):
     return features
 
 
-def get_scoring_features(audio_path, top_db=SILENCE_TOP_DB, y=None, sr=None):
+def get_scoring_features(audio_path, top_db=30, y=None, sr=None):
     """
     Returns a minimal dict with machine-readable keys for the scoring engine.
     Keys: pause_ratio (float), rms_energy (float).
@@ -113,7 +104,7 @@ def get_scoring_features(audio_path, top_db=SILENCE_TOP_DB, y=None, sr=None):
     return result
 
 
-def save_waveform(audio_path, output_img_name=WAVEFORM_IMAGE_NAME, y=None, sr=None):
+def save_waveform(audio_path, output_img_name="waveform.png", y=None, sr=None):
     """
     Plots the audio waveform with a neutral theme and saves it as an image file.
     Uses transparent background so it adapts to both light and dark modes.
@@ -127,9 +118,9 @@ def save_waveform(audio_path, output_img_name=WAVEFORM_IMAGE_NAME, y=None, sr=No
     logger.info("Generating waveform visualization...")
     
     # Neutral colors that work on both light and dark backgrounds
-    wave_color = WAVEFORM_COLOR
-    label_color = WAVEFORM_LABEL_COLOR
-    grid_color = WAVEFORM_GRID_COLOR
+    wave_color = "#4a9eff"
+    label_color = "#555555"
+    grid_color = "#cccccc"
     
     # Create matplotlib figure with transparent background
     fig, ax = plt.subplots(figsize=(12, 4), dpi=100)
@@ -153,8 +144,8 @@ def save_waveform(audio_path, output_img_name=WAVEFORM_IMAGE_NAME, y=None, sr=No
     ax.grid(True, color=grid_color, linewidth=0.4, alpha=0.4)
     
     # Save figure to reports/ directory
-    os.makedirs(REPORTS_DIR, exist_ok=True)
-    out_path = os.path.join(REPORTS_DIR, output_img_name)
+    os.makedirs("reports", exist_ok=True)
+    out_path = os.path.join("reports", output_img_name)
     fig.savefig(out_path, bbox_inches="tight", pad_inches=0.15, transparent=True)
     plt.close(fig)
     
