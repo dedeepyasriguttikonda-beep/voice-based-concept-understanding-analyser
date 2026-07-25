@@ -1,10 +1,5 @@
-import os
+from utils.speech_to_text import transcribe_audio
 import sys
-
-# Ensure project root is on path (script now lives in tests/)
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from speech_to_text import transcribe_audio
 
 # Set standard output encoding to utf-8 if possible
 if hasattr(sys.stdout, 'reconfigure'):

@@ -3,8 +3,6 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import streamlit as st
 
-from config import SBERT_MODEL_NAME
-
 logger = logging.getLogger(__name__)
 
 @st.cache_resource
@@ -12,8 +10,8 @@ def load_similarity_model():
     """
     Loads and caches the SentenceTransformer model.
     """
-    logger.info("Loading SentenceTransformer '%s' (cached)...", SBERT_MODEL_NAME)
-    m = SentenceTransformer(SBERT_MODEL_NAME)
+    logger.info("Loading SentenceTransformer 'all-MiniLM-L6-v2' (cached)...")
+    m = SentenceTransformer("all-MiniLM-L6-v2")
     logger.info("SentenceTransformer model loaded successfully.")
     return m
 
@@ -25,7 +23,7 @@ def calculate_similarity(reference_text, user_text):
     Returns similarity score as a float between 0 and 100.
     """
     if not reference_text.strip() or not user_text.strip():
-        logger.warning("Empty text provided for similarity — returning 0.0")
+        logger.warning("Empty text provided for similarity ΓÇö returning 0.0")
         return 0.0
 
     logger.info("Computing semantic similarity...")

@@ -5,8 +5,6 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.units import inch
 
-from config import REPORTS_DIR, PDF_REPORT_NAME
-
 def generate_pdf(transcript, similarity_score, final_score, understanding_level,
                  features, filler_stats, reference_text=None, waveform_img=None,
                  scoring_features=None):
@@ -17,8 +15,8 @@ def generate_pdf(transcript, similarity_score, final_score, understanding_level,
       - Audio Visualization (waveform image)
       - Evaluation Summary table with all metrics and qualitative feedback
     """
-    os.makedirs(REPORTS_DIR, exist_ok=True)
-    pdf_path = os.path.join(REPORTS_DIR, PDF_REPORT_NAME)
+    os.makedirs("reports", exist_ok=True)
+    pdf_path = "reports/report.pdf"
 
     doc = SimpleDocTemplate(pdf_path, pagesize=A4,
                             leftMargin=40, rightMargin=40,
