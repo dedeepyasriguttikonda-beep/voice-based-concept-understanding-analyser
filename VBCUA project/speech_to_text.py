@@ -6,6 +6,8 @@ import librosa
 import soundfile as sf
 import tempfile
 
+from config import WHISPER_MODEL_NAME
+
 logger = logging.getLogger(__name__)
 
 # Dynamically locate and add WinGet-installed Gyan.FFmpeg to path
@@ -27,8 +29,8 @@ def load_model():
     """
     Loads and caches the pre-trained Whisper model.
     """
-    logger.info("Loading Whisper 'base' model (cached via @st.cache_resource)...")
-    m = whisper.load_model("base")
+    logger.info("Loading Whisper '%s' model (cached via @st.cache_resource)...", WHISPER_MODEL_NAME)
+    m = whisper.load_model(WHISPER_MODEL_NAME)
     logger.info("Whisper model loaded successfully.")
     return m
 

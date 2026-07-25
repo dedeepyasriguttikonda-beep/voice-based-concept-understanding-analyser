@@ -76,7 +76,7 @@ Audio File (.wav/.mp3)
 ```bash
 # 1. Clone the repository
 git clone https://github.com/your-username/voice-based-concept-understanding-analyser.git
-cd voice-based-concept-understanding-analyser
+cd voice-based-concept-understanding-analyser/"VBCUA project"
 
 # 2. Create and activate a virtual environment
 python -m venv .venv
@@ -100,12 +100,14 @@ The app will open at `http://localhost:8501`.
 
 1. Push the repository to GitHub.
 2. Go to [share.streamlit.io](https://share.streamlit.io).
-3. Click **"New app"** → select the repository → set `app.py` as the main file.
-4. Add a `packages.txt` file in the repo root with:
+3. Click **"New app"** → select the repository → set `VBCUA project/app.py` as the main file path.
+4. Ensure `VBCUA project/packages.txt` exists with:
    ```
    ffmpeg
    ```
-5. Deploy. Streamlit Cloud will install dependencies from `requirements.txt` automatically.
+5. Deploy. Streamlit Cloud will install dependencies from `VBCUA project/requirements.txt` automatically.
+
+> **Note:** Since the app now lives inside `VBCUA project/`, make sure the Streamlit Cloud app settings point the "Main file path" there — otherwise it won't find `requirements.txt`/`packages.txt`.
 
 > **Note:** Large models (Whisper, Sentence-BERT) will be downloaded on first run and cached by `@st.cache_resource`.
 
@@ -115,30 +117,43 @@ The app will open at `http://localhost:8501`.
 
 ```
 voice-based-concept-understanding-analyser/
-├── .streamlit/
-│   └── config.toml          # Streamlit configuration
-├── audio/
-│   └── sample.mp3           # Sample audio for testing
-├── reports/
-│   ├── report.pdf            # Generated PDF report
-│   └── waveform.png          # Generated waveform image
-├── utils/
-│   ├── __init__.py
-│   ├── audio_utils.py        # Audio loading, feature extraction, waveform
-│   ├── report_generator.py   # PDF report generation (ReportLab)
-│   ├── scoring_engine.py     # Filler word analysis + multi-factor scoring
-│   ├── semantic_eval.py      # Sentence-BERT similarity computation
-│   └── speech_to_text.py     # Whisper transcription + normalization
-├── app.py                     # Main Streamlit application
-├── requirements.txt           # Python dependencies
-└── README.md
+├── Documentation/               # SmartBridge internship phase docs (1-8)
+├── VBCUA project/               # All application code and assets
+│   ├── audio/
+│   │   └── sample.mp3            # Sample audio for testing
+│   ├── reports/
+│   │   ├── report.pdf             # Generated PDF report
+│   │   └── waveform.png           # Generated waveform image
+│   ├── legacy/
+│   │   └── modules/               # Earlier (unused) module implementations, kept for reference
+│   ├── tests/
+│   │   ├── test_epic2.py           # Unit tests (exercises legacy/modules/)
+│   │   ├── test_transcription_manual.py
+│   │   ├── test_audio_features_manual.py
+│   │   └── test_similarity_manual.py
+│   ├── .streamlit/
+│   │   └── config.toml            # Streamlit configuration
+│   ├── app.py                     # Main Streamlit application
+│   ├── config.py                  # Central config: model names, paths, scoring weights
+│   ├── speech_to_text.py          # Whisper transcription + normalization
+│   ├── semantic_eval.py           # Sentence-BERT similarity computation
+│   ├── audio_utils.py             # Audio loading, feature extraction, waveform
+│   ├── scoring_engine.py          # Filler word analysis + multi-factor scoring
+│   ├── report_generator.py        # PDF report generation (ReportLab)
+│   ├── requirements.txt           # Python dependencies
+│   ├── packages.txt               # System packages for Streamlit Cloud (ffmpeg)
+│   └── er diagram.png
+├── Video Demo/
+│   └── README.md                 # Links to the demo video and live app
+├── README.md
+└── requirements_extracted.txt    # Copy of dependencies for quick reference
 ```
 
 ---
 
 ## Requirements
 
-See [requirements.txt](requirements.txt) for the full list. Key dependencies:
+See [requirements.txt](VBCUA%20project/requirements.txt) for the full list. Key dependencies:
 
 | Package | Version | Purpose |
 |---------|---------|---------|

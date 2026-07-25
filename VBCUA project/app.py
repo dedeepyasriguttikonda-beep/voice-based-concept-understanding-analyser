@@ -9,14 +9,34 @@ st.set_page_config(
 import os
 import time
 import logging
-from utils.speech_to_text import transcribe_audio
-from utils.semantic_eval import calculate_similarity
-from utils.audio_utils import load_audio, extract_audio_features, get_scoring_features, save_waveform
-from utils.scoring_engine import (
+from config import (
+    MAX_UPLOAD_SIZE_MB,
+    ALLOWED_AUDIO_TYPES,
+    SAMPLE_AUDIO_PATH,
+    TEMP_UPLOAD_PATH,
+    SIMILARITY_HIGH_THRESHOLD,
+    SIMILARITY_MID_THRESHOLD,
+    SIMILARITY_HIGH_POINTS,
+    SIMILARITY_MID_POINTS,
+    SIMILARITY_LOW_POINTS,
+    FILLER_RATIO_THRESHOLD,
+    FILLER_GOOD_POINTS,
+    FILLER_POOR_POINTS,
+    PAUSE_RATIO_THRESHOLD,
+    PAUSE_GOOD_POINTS,
+    PAUSE_POOR_POINTS,
+    RMS_ENERGY_THRESHOLD,
+    ENERGY_GOOD_POINTS,
+    ENERGY_POOR_POINTS,
+)
+from speech_to_text import transcribe_audio
+from semantic_eval import calculate_similarity
+from audio_utils import load_audio, extract_audio_features, get_scoring_features, save_waveform
+from scoring_engine import (
     calculate_filler_word_stats,
     evaluate_understanding,
 )
-from utils.report_generator import generate_pdf
+from report_generator import generate_pdf
 
 # Configure logging for all modules
 logging.basicConfig(
@@ -183,7 +203,7 @@ with col_upload:
     st.markdown("**Upload Student Audio (WAV)**")
     uploaded_file = st.file_uploader(
         "Upload Student Audio (WAV)",
-        type=["wav", "mp3"],
+        type=ALLOWED_AUDIO_TYPES,
         label_visibility="collapsed",
     )
 
@@ -205,17 +225,16 @@ with col_ref:
 file_path = None
 
 if use_sample:
-    file_path = "audio/sample.mp3"
+    file_path = SAMPLE_AUDIO_PATH
     if not os.path.exists(file_path):
         st.error(f"Sample audio not found at `{file_path}`.")
         file_path = None
 elif uploaded_file is not None:
-    # --- Input validation: file size (200 MB limit) ---
-    MAX_SIZE_MB = 200
-    if uploaded_file.size > MAX_SIZE_MB * 1024 * 1024:
-        st.error(f"❌ File exceeds {MAX_SIZE_MB} MB limit. Please upload a smaller file.")
+    # --- Input validation: file size limit ---
+    if uploaded_file.size > MAX_UPLOAD_SIZE_MB * 1024 * 1024:
+        st.error(f"❌ File exceeds {MAX_UPLOAD_SIZE_MB} MB limit. Please upload a smaller file.")
     else:
-        file_path = "temp_audio.wav"
+        file_path = TEMP_UPLOAD_PATH
         with open(file_path, "wb") as f:
             f.write(uploaded_file.read())
 
@@ -386,15 +405,19 @@ if st.session_state["analysis_done"]:
         det1, det2 = st.columns(2)
         with det1:
             st.markdown('<div class="section-header">Score Components</div>', unsafe_allow_html=True)
-            sim_pts = 50 if similarity_normalized > 0.7 else 30 if similarity_normalized > 0.4 else 10
-            filler_pts = 20 if filler_stats["filler_ratio"] < 0.05 else 10
-            pause_pts = 15 if scoring_features["pause_ratio"] < 0.25 else 5
-            energy_pts = 15 if scoring_features["rms_energy"] > 0.01 else 5
+            sim_pts = (
+                SIMILARITY_HIGH_POINTS if similarity_normalized > SIMILARITY_HIGH_THRESHOLD
+                else SIMILARITY_MID_POINTS if similarity_normalized > SIMILARITY_MID_THRESHOLD
+                else SIMILARITY_LOW_POINTS
+            )
+            filler_pts = FILLER_GOOD_POINTS if filler_stats["filler_ratio"] < FILLER_RATIO_THRESHOLD else FILLER_POOR_POINTS
+            pause_pts = PAUSE_GOOD_POINTS if scoring_features["pause_ratio"] < PAUSE_RATIO_THRESHOLD else PAUSE_POOR_POINTS
+            energy_pts = ENERGY_GOOD_POINTS if scoring_features["rms_energy"] > RMS_ENERGY_THRESHOLD else ENERGY_POOR_POINTS
             for label, pts, max_pts in [
-                ("Similarity", sim_pts, 50),
-                ("Filler Words", filler_pts, 20),
-                ("Pause Ratio", pause_pts, 15),
-                ("RMS Energy", energy_pts, 15),
+                ("Similarity", sim_pts, SIMILARITY_HIGH_POINTS),
+                ("Filler Words", filler_pts, FILLER_GOOD_POINTS),
+                ("Pause Ratio", pause_pts, PAUSE_GOOD_POINTS),
+                ("RMS Energy", energy_pts, ENERGY_GOOD_POINTS),
             ]:
                 st.markdown(
                     f'<div class="feature-row"><span class="feat-label">{label}</span>'

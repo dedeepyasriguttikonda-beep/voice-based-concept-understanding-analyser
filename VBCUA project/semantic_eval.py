@@ -3,6 +3,8 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import streamlit as st
 
+from config import SBERT_MODEL_NAME
+
 logger = logging.getLogger(__name__)
 
 @st.cache_resource
@@ -10,8 +12,8 @@ def load_similarity_model():
     """
     Loads and caches the SentenceTransformer model.
     """
-    logger.info("Loading SentenceTransformer 'all-MiniLM-L6-v2' (cached)...")
-    m = SentenceTransformer("all-MiniLM-L6-v2")
+    logger.info("Loading SentenceTransformer '%s' (cached)...", SBERT_MODEL_NAME)
+    m = SentenceTransformer(SBERT_MODEL_NAME)
     logger.info("SentenceTransformer model loaded successfully.")
     return m
 
